@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>Shopping List</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>create</display-name>
+    <servlet-name>create</servlet-name>
+    <servlet-class>shultz.shopping.create</servlet-class>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>AddList</display-name>
+    <servlet-name>AddList</servlet-name>
+    <servlet-class>shultz.shopping.AddList</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddList</servlet-name>
+    <url-pattern>/AddList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Delete</display-name>
+    <servlet-name>Delete</servlet-name>
+    <servlet-class>shultz.shopping.Delete</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Delete</servlet-name>
+    <url-pattern>/Delete</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>listChoiceForwarder</display-name>
+    <servlet-name>listChoiceForwarder</servlet-name>
+    <servlet-class>shultz.shopping.listChoiceForwarder</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>listChoiceForwarder</servlet-name>
+    <url-pattern>/listChoiceForwarder</url-pattern>
+  </servlet-mapping>
+</web-app>

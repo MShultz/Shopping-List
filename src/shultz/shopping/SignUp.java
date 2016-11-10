@@ -4,7 +4,7 @@ package shultz.shopping;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -53,7 +53,7 @@ public class SignUp extends HttpServlet {
 	private void directPage(HttpServletRequest request, HttpServletResponse response, boolean notAccepted) {
 		try {
 			if (notAccepted) {
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				request.getRequestDispatcher("/signup.jsp").forward(request, response);
 			} else {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("username", request.getParameter("username"));
@@ -69,19 +69,14 @@ public class SignUp extends HttpServlet {
 	}
 
 	private void createUser(String username, String password) throws SQLException {
-		Statement userCreationStatement = DataHandler.getNewStatement();
-		userCreationStatement.executeUpdate("INSERT into users (username, `password`) VALUES (\"" + username + "\",\""
+		DataHandler.executeUpdate("INSERT into users (username, `password`) VALUES (\"" + username + "\",\""
 				+ DataHandler.handlePassword(password) + "\");");
 	}
 
 	private boolean usernameExists(String username) throws SQLException {
-		ResultSet usernames = null;
-		boolean exists = true;
-		Statement userNameRequest = DataHandler.getNewStatement();
-		usernames = userNameRequest.executeQuery("SELECT username FROM users where username = '" + username + "'");
-		exists = usernames.next();
+		ResultSet usernames = DataHandler.executeQuery("SELECT username FROM users where username = '" + username + "'");
+		boolean exists = usernames.next();
 		usernames.close();
-
 		return exists;
 	}
 

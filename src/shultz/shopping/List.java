@@ -22,8 +22,8 @@ public class List {
 			listItems = listRequest.executeQuery("SELECT * FROM listDetails WHERE list_ID ="
 					+ DataHandler.getList_ID(DataHandler.getUserID(this.username), this.getListName()));
 			while (listItems.next()) {
-				addItem(new Item(listItems.getString(2), listItems.getInt(3), listItems.getDouble(4),
-						listItems.getDouble(5)));
+				addItem(new Item(listItems.getInt(2),listItems.getString(3), listItems.getInt(4), listItems.getDouble(5),
+						listItems.getDouble(6)));
 			}
 		} catch (SQLException e) {
 			System.out.println("Unable to get list items");

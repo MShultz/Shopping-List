@@ -45,4 +45,34 @@
     <servlet-name>listChoiceForwarder</servlet-name>
     <url-pattern>/listChoiceForwarder</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditForward</display-name>
+    <servlet-name>EditForward</servlet-name>
+    <servlet-class>shultz.shopping.EditForward</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditForward</servlet-name>
+    <url-pattern>/EditForward</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>DeleteItem</display-name>
+    <servlet-name>DeleteItem</servlet-name>
+    <servlet-class>shultz.shopping.DeleteItem</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteItem</servlet-name>
+    <url-pattern>/DeleteItem</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Logout</display-name>
+    <servlet-name>Logout</servlet-name>
+    <servlet-class>shultz.shopping.Logout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Logout</servlet-name>
+    <url-pattern>/Logout</url-pattern>
+  </servlet-mapping>
 </web-app>

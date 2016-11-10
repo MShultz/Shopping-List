@@ -1,8 +1,8 @@
 package shultz.shopping;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/create")
 public class create extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -37,21 +36,63 @@ public class create extends HttpServlet {
 	private void insertDetails(HttpServletRequest request, int list_ID) {
 		if (!request.getParameter("item").isEmpty()) {
 			String itemDescription = request.getParameter("item");
-			executeUpdateQuery("INSERT into listDetails (list_ID, description) VALUES (" + list_ID + ", \""
-					+ itemDescription + "\");");
-			if ((!request.getParameter("price").isEmpty()) && isDouble(request.getParameter("price"))) {
-				executeUpdateQuery("UPDATE listDetails SET price=" + request.getParameter("price") + " WHERE list_ID ="
-						+ list_ID + " AND description = \"" + itemDescription + "\"");
-			}
-			if ((!request.getParameter("quantity").isEmpty()) && isInt(request.getParameter("quantity"))) {
-				executeUpdateQuery("UPDATE listDetails SET quantity=" + request.getParameter("quantity")
-						+ " WHERE list_ID =" + list_ID + " AND description = \"" + itemDescription + "\"");
-			}
-			if ((!request.getParameter("weight").isEmpty()) && isDouble(request.getParameter("weight"))) {
-				executeUpdateQuery("UPDATE listDetails SET weight=" + request.getParameter("weight")
-						+ " WHERE list_ID =" + list_ID + " AND description = \"" + itemDescription + "\"");
-			}
+			handleItemAddition(request, itemDescription, list_ID);
+
 		}
+	}
+
+	private void handleItemAddition(HttpServletRequest request, String itemDescription, int list_ID) {
+		boolean continueHandling = handleDescription(request, itemDescription, list_ID);
+		if(continueHandling)
+		handleItemDetails(request, itemDescription, list_ID);
+	}
+
+	private void handleItemDetails(HttpServletRequest request, String itemDescription, int list_ID) {
+		if ((!request.getParameter("price").isEmpty()) && isDouble(request.getParameter("price"))) {
+			DataHandler.executeUpdate("UPDATE listDetails SET price=" + request.getParameter("price")
+					+ " WHERE list_ID =" + list_ID + " AND description = \"" + itemDescription + "\"");
+		}
+		if ((!request.getParameter("quantity").isEmpty()) && isInt(request.getParameter("quantity"))) {
+			DataHandler.executeUpdate("UPDATE listDetails SET quantity=" + request.getParameter("quantity")
+					+ " WHERE list_ID =" + list_ID + " AND description = \"" + itemDescription + "\"");
+		}
+		if ((!request.getParameter("weight").isEmpty()) && isDouble(request.getParameter("weight"))) {
+			DataHandler.executeUpdate("UPDATE listDetails SET weight=" + request.getParameter("weight")
+					+ " WHERE list_ID =" + list_ID + " AND description = \"" + itemDescription + "\"");
+		}
+	}
+
+	private boolean itemExists(String item, int list_ID) {
+		boolean exists = false;
+		ResultSet results = DataHandler
+				.executeQuery("SELECT * From listDetails WHERE description=\"" + item + "\" AND list_ID=" + list_ID);
+		try {
+			exists = results.next();
+			results.close();
+		} catch (SQLException e) {
+			System.out.println("Error reading results.");
+		}
+		return exists;
+	}
+
+	private boolean handleDescription(HttpServletRequest request, String itemDescription, int list_ID) {
+		boolean continueWithItem = true;
+		if (isAdd(request)) {
+			if(!itemExists(itemDescription, list_ID)){
+			DataHandler.executeUpdate("INSERT into listDetails (list_ID, description) VALUES (" + list_ID + ", \""
+					+ itemDescription + "\");");
+			}else{
+				continueWithItem = false;
+			}
+		} else {
+			DataHandler.executeUpdate("UPDATE listDetails SET description=\"" + request.getParameter("item")
+					+ "\" WHERE list_ID =" + list_ID + " AND item_ID =" + request.getParameter("item_ID"));
+		}
+		return continueWithItem;
+	}
+
+	private boolean isAdd(HttpServletRequest request) {
+		return request.getParameter("source").equals("add");
 	}
 
 	private String getUsername(HttpServletRequest request) {
@@ -65,16 +106,6 @@ public class create extends HttpServlet {
 
 	private boolean isInt(String input) {
 		return input.matches("[0-9]+");
-	}
-
-	private void executeUpdateQuery(String query) {
-		Statement detailStatement = DataHandler.getNewStatement();
-		try {
-			detailStatement.executeUpdate(query);
-		} catch (SQLException e) {
-			System.out.println("Unable to insert list details.");
-			e.printStackTrace();
-		}
 	}
 
 }

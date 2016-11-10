@@ -53,7 +53,7 @@ public class Login extends HttpServlet {
 	private void directPage(HttpServletRequest request, HttpServletResponse response, boolean loggedIn) {
 		try {
 			if (!loggedIn) {
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				request.getRequestDispatcher("/login.jsp").forward(request, response);
 			} else {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("username", request.getParameter("username"));

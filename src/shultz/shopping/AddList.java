@@ -3,7 +3,6 @@ package shultz.shopping;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,27 +51,19 @@ public class AddList extends HttpServlet {
 	}
 
 	private void addList(int user_ID, String listname) {
-		Statement detailStatement = DataHandler.getNewStatement();
-		try {
-			detailStatement.executeUpdate(
-					"INSERT into userLists (user_ID, listname) VALUES (" + user_ID + ",\"" + listname + "\");");
-		} catch (SQLException e) {
-			System.out.println("Unable to create list.");
-			e.printStackTrace();
-		}
+		DataHandler.executeUpdate(
+				"INSERT into userLists (user_ID, listname) VALUES (" + user_ID + ",\"" + listname + "\");");
 	}
 
 	private boolean listNameExists(String listname, int user_ID) {
-		Statement listStatement = DataHandler.getNewStatement();
+		ResultSet results = DataHandler
+				.executeQuery("Select * FROM userLists WHERE listname = \"" + listname + "\" AND user_ID =" + user_ID);
 		boolean exists = false;
 		try {
-			ResultSet results = listStatement.executeQuery(
-					"Select * FROM userLists WHERE listname = \"" + listname + "\" AND user_ID =" + user_ID);
 			exists = results.next();
 			results.close();
 		} catch (SQLException e) {
-			System.out.println("Unable to query database.");
-			e.printStackTrace();
+		System.out.println("Error reading results");	
 		}
 		return exists;
 	}

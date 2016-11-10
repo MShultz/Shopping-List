@@ -13,6 +13,28 @@ public class DataHandler {
 	private static final String jdbcConnectionString = "jdbc:mysql://localhost/listapplication";
 	static Connection con = null;
 
+	public static void executeUpdate(String query) {
+		Statement detailStatement = DataHandler.getNewStatement();
+		try {
+			detailStatement.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.println("Unable to insert into table.");
+			e.printStackTrace();
+		}
+	}
+
+	public static ResultSet executeQuery(String query) {
+		Statement detailStatement = DataHandler.getNewStatement();
+		ResultSet results = null;
+		try {
+			results = detailStatement.executeQuery(query);
+		} catch (SQLException e) {
+			System.out.println("Unable to query table.");
+			e.printStackTrace();
+		}
+		return results;
+	}
+
 	public static Statement getNewStatement() {
 		Statement state = null;
 		try {
@@ -62,8 +84,8 @@ public class DataHandler {
 		Statement IDRequest = DataHandler.getNewStatement();
 		try {
 			ResultSet id = IDRequest.executeQuery("SELECT user_ID from users WHERE username = \"" + username + "\"");
-			if(id.next())
-			user_ID = id.getInt(1);
+			if (id.next())
+				user_ID = id.getInt(1);
 			id.close();
 		} catch (SQLException e) {
 			System.out.println("Unable to get user ID.");
@@ -76,10 +98,10 @@ public class DataHandler {
 		int list_ID = -1;
 		Statement IDRequest = DataHandler.getNewStatement();
 		try {
-			ResultSet id = IDRequest.executeQuery(
-					"SELECT list_ID from userLists WHERE user_ID = " + user_ID + " AND listname = \"" + listname + "\"");
-			if(id.next())
-			list_ID = id.getInt(1);
+			ResultSet id = IDRequest.executeQuery("SELECT list_ID from userLists WHERE user_ID = " + user_ID
+					+ " AND listname = \"" + listname + "\"");
+			if (id.next())
+				list_ID = id.getInt(1);
 			id.close();
 		} catch (SQLException e) {
 			System.out.println("Unable to get list ID.");
